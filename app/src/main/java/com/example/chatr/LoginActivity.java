@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    //Send user to main Activity
+    //Send user to main activity
     private void SendUserToMainActivity() {
         Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(loginIntent);
