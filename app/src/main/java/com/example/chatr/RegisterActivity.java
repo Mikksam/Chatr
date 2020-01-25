@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
@@ -28,6 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView alreadyHaveAnAccount;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference DBRef;
 
     private ProgressDialog loadingBar;
 
@@ -38,6 +41,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         //Initialize to firebase
         mAuth = FirebaseAuth.getInstance();
+        //Reference to firebase database
+        DBRef = FirebaseDatabase.getInstance().getReference();
 
         InitializeComponents();
 
@@ -82,7 +87,11 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
-                        SendUserToLoginActivity();
+                        //On successful creation makes a new entry to the DB
+                        String userID = mAuth.getCurrentUser().getUid();
+                        DBRef.child("Users").child(userID).setValue("");
+
+                        SendUserToMainActivity();
                         Toast.makeText(RegisterActivity.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
                         loadingBar.dismiss();
                     }
@@ -95,6 +104,8 @@ public class RegisterActivity extends AppCompatActivity {
             });
         }
     }
+
+
 
     //Initialize components: Button, EditTexts and TextView
     private void InitializeComponents() {
@@ -112,7 +123,13 @@ public class RegisterActivity extends AppCompatActivity {
         Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(loginIntent);
     }
-
+    //Method to send user to main activity after successful registration
+    private void SendUserToMainActivity() {
+        Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+        finish();
+    }
 }
 
 
