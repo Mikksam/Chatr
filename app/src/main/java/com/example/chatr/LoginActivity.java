@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        //sends user to the
+        //sends user to the main activity if authentication is ok
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

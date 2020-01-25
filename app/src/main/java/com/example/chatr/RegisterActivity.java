@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.w3c.dom.Text;
 
@@ -87,7 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     else{
                         String errorMessage = task.getException().toString();
-                        Toast.makeText(RegisterActivity.this, "Error occurred: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Error occurred: " + errorMessage, Toast.LENGTH_LONG).show();
                         loadingBar.dismiss();
                     }
                 }
