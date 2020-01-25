@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseUser currentUser;
+    //private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
 
     private ProgressDialog loadingBar;
@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        //currentUser = mAuth.getCurrentUser();
 
         InitializeComponents();
 
@@ -107,7 +107,8 @@ public class LoginActivity extends AppCompatActivity {
         loadingBar = new ProgressDialog(this);
     }
 
-    //Check if already logged in
+   /*
+   //Check if already logged in
     @Override
     protected void onStart() {
         super.onStart();
@@ -117,12 +118,14 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
-
+*/
     //Send user to main Activity
-    private void SendUserToMainActivity() {
-        Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(loginIntent);
-    }
+   private void SendUserToMainActivity() {
+       Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+       mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+       startActivity(mainIntent);
+       finish();
+   }
 
     //Send user to register Activity
     private void SendUserToRegisterActivity() {
