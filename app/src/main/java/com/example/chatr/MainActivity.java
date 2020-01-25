@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout = (TabLayout) findViewById(R.id.main_tabs);
         mTabLayout.setupWithViewPager(mViewPager);
     }
-
+    //Check if user is logged in, if not, proceed to SendUserToLoginActivity method
     @Override
     protected void onStart() {
         super.onStart();
@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Send user to login Activity
     private void SendUserToLoginActivity() {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(loginIntent);
