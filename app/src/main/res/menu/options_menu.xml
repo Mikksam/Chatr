@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:title="Create Group"
+        android:id="@+id/menu_group_option"
+        app:showAsAction="never"
+        >
+    </item>
+
+    <item
         android:title="Settings"
         android:id="@+id/menu_settings_option"
         app:showAsAction="never"
