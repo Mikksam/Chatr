@@ -45,14 +45,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Initialize Firebase methods
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         DBRef = FirebaseDatabase.getInstance().getReference();
 
+        //Initialize toolbar
         mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Chatr");
 
+        //Set up tabs for main activity's menu bar
         mViewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
 
         mTabAccess = new TabAccess(getSupportFragmentManager());
@@ -127,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Creates a dialog for making a new group
+    //Sends the created group name as a parameter to method that saves ti then to DB
     private void MakeNewGroup() {
         AlertDialog.Builder groupBuilder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
         groupBuilder.setTitle("Enter name for the Group: ");
@@ -159,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         groupBuilder.show();
     }
 
+    //Saves the created group to DB. Gets group name from the method above
     private void CreateNewGroup(String groupName) {
         DBRef.child("Groups").child(groupName).setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

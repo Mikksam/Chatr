@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.content.Intent;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,6 +56,19 @@ public class GroupChatsFragment extends Fragment {
 
         GetAndDisplayGroups();
 
+        //By clicking a group chat, send selected group chat info and user to group chat activity
+        groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String selectedGroup = parent.getItemAtPosition(position).toString();
+
+                Intent groupChatIntent = new Intent(getContext(), GroupChatActivity.class);
+                groupChatIntent.putExtra("groupName", selectedGroup);
+                startActivity(groupChatIntent);
+            }
+        });
+
         return groupFragmentView;
 
     }
@@ -74,6 +89,7 @@ public class GroupChatsFragment extends Fragment {
                 }
                 groupList.clear();
                 groupList.addAll(set);
+                arrayAdapter.notifyDataSetChanged();
             }
 
             @Override
