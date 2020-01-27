@@ -28,6 +28,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
 
         InitializeComponents();
 
+        //Sends phone number to Firebase
         phoneNumberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
