@@ -85,5 +85,25 @@
 
     </Button>
 
+    <TextView
+        android:id="@+id/go_back_link"
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        android:text="Go back"
+        android:layout_below="@+id/verify_button"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="textEnd"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="17sp"
+        android:padding="4dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="15dp"
+        android:drawableEnd="@drawable/streamline_icon_navigation_left_o"
+        android:drawablePadding="5dp"
+        >
+
+    </TextView>
+
 
 </RelativeLayout>
