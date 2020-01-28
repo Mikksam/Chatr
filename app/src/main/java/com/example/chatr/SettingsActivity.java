@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -36,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private Button saveChangesButton;
     private EditText username, status;
-    private CircleImageView userProfileImage;
+    private CircleImageView userProfilePicture;
     private ProgressDialog loadingBar;
 
     private String currentUserID;
@@ -69,7 +70,7 @@ public class SettingsActivity extends AppCompatActivity {
         GetUserInfo();
 
         //Allowing user to choose profile pic
-        userProfileImage.setOnClickListener(new View.OnClickListener() {
+        userProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent galleryIntent = new Intent();
@@ -88,7 +89,7 @@ public class SettingsActivity extends AppCompatActivity {
         saveChangesButton = (Button) findViewById(R.id.save_button);
         username = (EditText) findViewById(R.id.set_username);
         status = (EditText) findViewById(R.id.set_status);
-        userProfileImage = (CircleImageView) findViewById(R.id.profile_image);
+        userProfilePicture = (CircleImageView) findViewById(R.id.profile_image);
         loadingBar = new ProgressDialog(this);
     }
 
@@ -210,11 +211,11 @@ public class SettingsActivity extends AppCompatActivity {
 
                     String getUsername = dataSnapshot.child("name").getValue().toString();
                     String getStatus = dataSnapshot.child("status").getValue().toString();
-                    String getProfileImage = dataSnapshot.child("image").getValue().toString();
+                    String getProfilePicture = dataSnapshot.child("image").getValue().toString();
 
                     username.setText(getUsername);
                     status.setText(getStatus);
-                    //userProfileImage.
+                    Picasso.get().load(getProfilePicture).into(userProfilePicture);
                 }
                 else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name"))){
 
