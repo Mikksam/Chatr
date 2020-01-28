@@ -1,9 +1,12 @@
 package com.example.chatr;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,6 +22,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 
@@ -28,11 +37,15 @@ public class SettingsActivity extends AppCompatActivity {
 
     private Button saveChangesButton;
     private EditText username, status;
-    private CircleImageView userProfileImage;
+    private CircleImageView userProfilePicture;
+    private ProgressDialog loadingBar;
 
     private String currentUserID;
     private FirebaseAuth mAuth;
     private DatabaseReference DBRef;
+    private StorageReference ProfilePicRef;
+
+    private static final int GalleryPic = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         DBRef = FirebaseDatabase.getInstance().getReference();
+        ProfilePicRef = FirebaseStorage.getInstance().getReference().child("ProfilePictures");
 
         InitializeComponents();
 
@@ -54,6 +68,18 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         GetUserInfo();
+
+        //Allowing user to choose profile pic
+        userProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent,GalleryPic);
+            }
+        });
+
     }
 
 
@@ -63,7 +89,85 @@ public class SettingsActivity extends AppCompatActivity {
         saveChangesButton = (Button) findViewById(R.id.save_button);
         username = (EditText) findViewById(R.id.set_username);
         status = (EditText) findViewById(R.id.set_status);
-        userProfileImage = (CircleImageView) findViewById(R.id.profile_image);
+        userProfilePicture = (CircleImageView) findViewById(R.id.profile_image);
+        loadingBar = new ProgressDialog(this);
+    }
+
+    //
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == GalleryPic && resultCode == RESULT_OK && data != null){
+            Uri imageUri = data.getData();
+
+            //Image cropping utilized
+            CropImage.activity()
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(1,1)
+                    .start(this);
+        }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            if(resultCode == RESULT_OK){
+
+                loadingBar.setTitle("Setting profile picture");
+                loadingBar.setMessage("Your profile picture is updating...");
+                loadingBar.setCanceledOnTouchOutside(false);
+                loadingBar.show();
+
+                Uri resultUri = result.getUri();
+
+                StorageReference filePath = ProfilePicRef.child(currentUserID+ ".jpg");
+
+                //After cropping need to save image to storage unit
+                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                        if(task.isSuccessful()){
+                            Toast.makeText(SettingsActivity.this, "Profile picture uploaded successfully...", Toast.LENGTH_SHORT).show();
+
+                            //get image URL from storage
+                            final String downloadedUrl = task.getResult().getStorage().toString();
+                            System.out.println(downloadedUrl);
+                            //pass URL to DB inside current user
+                            DBRef.child("Users").child(currentUserID).child("image").setValue(downloadedUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    if (task.isSuccessful()){
+                                        Toast.makeText(SettingsActivity.this, "Picture saved successfully...", Toast.LENGTH_SHORT).show();
+
+                                        loadingBar.dismiss();
+
+                                    }
+                                    else{
+
+                                        String errorMessage = task.getException().toString();
+                                        Toast.makeText(SettingsActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+
+                                        loadingBar.dismiss();
+
+                                    }
+
+                                }
+                            });
+
+                        }
+                        else{
+                            String errorMessage = task.getException().toString();
+                            Toast.makeText(SettingsActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+
+                            loadingBar.dismiss();
+
+                        }
+                    }
+                });
+            }
+        }
+
     }
 
     //Method to save user info
@@ -109,11 +213,13 @@ public class SettingsActivity extends AppCompatActivity {
 
                     String getUsername = dataSnapshot.child("name").getValue().toString();
                     String getStatus = dataSnapshot.child("status").getValue().toString();
-                    String getProfileImage = dataSnapshot.child("image").getValue().toString();
+                    String getProfilePicture = dataSnapshot.child("image").getValue().toString();
+
+                    System.out.println(getProfilePicture);
 
                     username.setText(getUsername);
                     status.setText(getStatus);
-                    //userProfileImage.
+                    Picasso.get().load(getProfilePicture).into(userProfilePicture);
                 }
                 else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name"))){
 
@@ -122,6 +228,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                     username.setText(getUsername);
                     status.setText(getStatus);
+
 
                 }
                 else{
@@ -136,7 +243,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
     }
-
 
     //Send user to main Activity
     private void SendUserToMainActivity() {
