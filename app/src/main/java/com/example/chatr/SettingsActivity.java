@@ -55,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         DBRef = FirebaseDatabase.getInstance().getReference();
-        ProfilePicRef = FirebaseStorage.getInstance().getReference().child("Profile Pictures");
+        ProfilePicRef = FirebaseStorage.getInstance().getReference().child("ProfilePictures");
 
         InitializeComponents();
 
@@ -129,8 +129,10 @@ public class SettingsActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(SettingsActivity.this, "Profile picture uploaded successfully...", Toast.LENGTH_SHORT).show();
 
-                            final String downloadedUrl = task.getResult().getMetadata().getReference().getDownloadUrl().toString();
-
+                            //get image URL from storage
+                            final String downloadedUrl = task.getResult().getStorage().toString();
+                            System.out.println(downloadedUrl);
+                            //pass URL to DB inside current user
                             DBRef.child("Users").child(currentUserID).child("image").setValue(downloadedUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -225,6 +227,7 @@ public class SettingsActivity extends AppCompatActivity {
                     username.setText(getUsername);
                     status.setText(getStatus);
 
+                    //gs://chatr-c2ad8.appspot.com/Profile Pictures/oYRA82nFC9RaVJF3Fonz1txJDBk1.jpg
                 }
                 else{
                     Toast.makeText(SettingsActivity.this, "Please update your profile information...", Toast.LENGTH_SHORT).show();
