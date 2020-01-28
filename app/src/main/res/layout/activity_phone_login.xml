@@ -8,7 +8,7 @@
     tools:context=".PhoneLoginActivity">
 
     <ImageView
-        android:id="@+id/login_picture"
+        android:id="@+id/phone_register_picture"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@color/colorAccent"
@@ -16,6 +16,94 @@
 
     </ImageView>
 
+
+    <EditText
+        android:id="@+id/phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Insert your phone number here..."
+        android:textAllCaps="false"
+        android:layout_below="@+id/phone_register_picture"
+        android:padding="5dp"
+        android:background="@drawable/inputs"
+        android:textAlignment="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:drawableStart="@drawable/streamline_icon_mobile_phone_b"
+        >
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/phone_verification_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter verification code"
+        android:textAllCaps="false"
+        android:layout_below="@+id/phone_number"
+        android:padding="5dp"
+        android:background="@drawable/inputs"
+        android:textAlignment="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:drawableStart="@drawable/streamline_icon_lock_black"
+        android:visibility="invisible"
+        >
+
+    </EditText>
+
+    <Button
+        android:id="@+id/phone_submit_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/phone_verification_number"
+        android:background="@drawable/buttons"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="15dp"
+        android:text="Send phone number"
+        android:textAllCaps="false"
+        >
+
+    </Button>
+
+    <Button
+        android:id="@+id/verify_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/phone_submit_button"
+        android:background="@drawable/buttons"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="15dp"
+        android:text="Send phone number"
+        android:textAllCaps="false"
+        android:visibility="invisible"
+        >
+
+    </Button>
+
+    <TextView
+        android:id="@+id/go_back_link"
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        android:text="Go back"
+        android:layout_below="@+id/verify_button"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="textEnd"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="17sp"
+        android:padding="4dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="15dp"
+        android:drawableEnd="@drawable/streamline_icon_navigation_left_o"
+        android:drawablePadding="5dp"
+        >
+
+    </TextView>
 
 
 </RelativeLayout>

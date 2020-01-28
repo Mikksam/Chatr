@@ -48,13 +48,22 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        //sends user to the main activity if authentication is ok
+        //Calls for method to send user to the main activity if authentication is ok
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AllowLogin();
             }
         });
+
+        //Calls for method to send user to phone login activity
+        phoneLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendUserToPhoneLogin();
+            }
+        });
+
     }
 
     //Checks if user is allowed to log in and sends user to main activity if allowed
@@ -132,4 +141,11 @@ public class LoginActivity extends AppCompatActivity {
         Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(registerIntent);
     }
+
+    //sends user to phone login activity
+    private void SendUserToPhoneLogin() {
+        Intent phoneLoginIntent = new Intent(LoginActivity.this, PhoneLoginActivity.class);
+        startActivity(phoneLoginIntent);
+    }
+
 }
