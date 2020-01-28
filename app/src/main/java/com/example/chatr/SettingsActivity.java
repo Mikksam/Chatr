@@ -215,6 +215,8 @@ public class SettingsActivity extends AppCompatActivity {
                     String getStatus = dataSnapshot.child("status").getValue().toString();
                     String getProfilePicture = dataSnapshot.child("image").getValue().toString();
 
+                    System.out.println(getProfilePicture);
+
                     username.setText(getUsername);
                     status.setText(getStatus);
                     Picasso.get().load(getProfilePicture).into(userProfilePicture);
