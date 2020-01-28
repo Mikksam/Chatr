@@ -227,7 +227,7 @@ public class SettingsActivity extends AppCompatActivity {
                     username.setText(getUsername);
                     status.setText(getStatus);
 
-                    //gs://chatr-c2ad8.appspot.com/Profile Pictures/oYRA82nFC9RaVJF3Fonz1txJDBk1.jpg
+
                 }
                 else{
                     Toast.makeText(SettingsActivity.this, "Please update your profile information...", Toast.LENGTH_SHORT).show();
