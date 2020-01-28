@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button saveChangesButton;
     private EditText username, status;
     private CircleImageView userProfileImage;
+    private ProgressDialog loadingBar;
 
     private String currentUserID;
     private FirebaseAuth mAuth;
@@ -66,6 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         GetUserInfo();
 
+        //Allowing user to choose profile pic
         userProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,8 +89,10 @@ public class SettingsActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.set_username);
         status = (EditText) findViewById(R.id.set_status);
         userProfileImage = (CircleImageView) findViewById(R.id.profile_image);
+        loadingBar = new ProgressDialog(this);
     }
 
+    //
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -95,6 +100,7 @@ public class SettingsActivity extends AppCompatActivity {
         if(requestCode == GalleryPic && resultCode == RESULT_OK && data != null){
             Uri imageUri = data.getData();
 
+            //Image cropping utilized
             CropImage.activity()
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .setAspectRatio(1,1)
@@ -105,20 +111,54 @@ public class SettingsActivity extends AppCompatActivity {
 
             if(resultCode == RESULT_OK){
 
+                loadingBar.setTitle("Setting profile picture");
+                loadingBar.setMessage("Your profile picture is updating...");
+                loadingBar.setCanceledOnTouchOutside(false);
+                loadingBar.show();
+
                 Uri resultUri = result.getUri();
 
                 StorageReference filePath = ProfilePicRef.child(currentUserID+ ".jpg");
 
+                //After cropping need to save image to storage unit
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
                         if(task.isSuccessful()){
                             Toast.makeText(SettingsActivity.this, "Profile picture uploaded successfully...", Toast.LENGTH_SHORT).show();
+
+                            final String downloadedUrl = task.getResult().getMetadata().getReference().getDownloadUrl().toString();
+
+                            DBRef.child("Users").child(currentUserID).child("image").setValue(downloadedUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    if (task.isSuccessful()){
+                                        Toast.makeText(SettingsActivity.this, "Picture saved successfully...", Toast.LENGTH_SHORT).show();
+
+                                        loadingBar.dismiss();
+
+                                    }
+                                    else{
+
+                                        String errorMessage = task.getException().toString();
+                                        Toast.makeText(SettingsActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+
+                                        loadingBar.dismiss();
+
+                                    }
+
+                                }
+                            });
+
                         }
                         else{
                             String errorMessage = task.getException().toString();
                             Toast.makeText(SettingsActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+
+                            loadingBar.dismiss();
+
                         }
                     }
                 });
