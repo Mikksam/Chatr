@@ -1,9 +1,11 @@
 package com.example.chatr;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,6 +21,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 
@@ -33,6 +40,9 @@ public class SettingsActivity extends AppCompatActivity {
     private String currentUserID;
     private FirebaseAuth mAuth;
     private DatabaseReference DBRef;
+    private StorageReference ProfilePicRef;
+
+    private static final int GalleryPic = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         DBRef = FirebaseDatabase.getInstance().getReference();
+        ProfilePicRef = FirebaseStorage.getInstance().getReference().child("Profile Pictures");
 
         InitializeComponents();
 
@@ -54,6 +65,17 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         GetUserInfo();
+
+        userProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent,GalleryPic);
+            }
+        });
+
     }
 
 
@@ -64,6 +86,45 @@ public class SettingsActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.set_username);
         status = (EditText) findViewById(R.id.set_status);
         userProfileImage = (CircleImageView) findViewById(R.id.profile_image);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == GalleryPic && resultCode == RESULT_OK && data != null){
+            Uri imageUri = data.getData();
+
+            CropImage.activity()
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(1,1)
+                    .start(this);
+        }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            if(resultCode == RESULT_OK){
+
+                Uri resultUri = result.getUri();
+
+                StorageReference filePath = ProfilePicRef.child(currentUserID+ ".jpg");
+
+                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                        if(task.isSuccessful()){
+                            Toast.makeText(SettingsActivity.this, "Profile picture uploaded successfully...", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            String errorMessage = task.getException().toString();
+                            Toast.makeText(SettingsActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }
+
     }
 
     //Method to save user info
@@ -136,7 +197,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
     }
-
 
     //Send user to main Activity
     private void SendUserToMainActivity() {
