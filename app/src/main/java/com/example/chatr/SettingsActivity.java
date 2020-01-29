@@ -130,10 +130,10 @@ public class SettingsActivity extends AppCompatActivity {
                             Toast.makeText(SettingsActivity.this, "Profile picture uploaded successfully...", Toast.LENGTH_SHORT).show();
 
                             //get image URL from storage
-                            final String downloadedUrl = task.getResult().getStorage().toString();
-                            System.out.println(downloadedUrl);
+                            final String downloadUrl = task.getResult().getStorage().toString();
+                            System.out.println(downloadUrl);
                             //pass URL to DB inside current user
-                            DBRef.child("Users").child(currentUserID).child("image").setValue(downloadedUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            DBRef.child("Users").child(currentUserID).child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
 
