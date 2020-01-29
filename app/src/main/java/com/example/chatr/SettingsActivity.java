@@ -70,6 +70,7 @@ public class SettingsActivity extends AppCompatActivity {
         GetUserInfo();
 
         //Allowing user to choose profile pic
+        //For some reason calls multiple times, find out why!!!!
         userProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
