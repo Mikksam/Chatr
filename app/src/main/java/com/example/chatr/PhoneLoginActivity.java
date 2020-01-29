@@ -11,8 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.concurrent.TimeUnit;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
@@ -57,14 +55,15 @@ public class PhoneLoginActivity extends AppCompatActivity {
                     verificationCode.setVisibility(View.VISIBLE);
                     verifyButton.setVisibility(View.VISIBLE);
 
-                   /*
-                   //For some reason doesn't understand TimeUnit and explodes when imported java-library for it
+                   /*//For some reason doesn't understand TimeUnit and explodes when imported java-library for it
                     PhoneAuthProvider.getInstance().verifyPhoneNumber(
                             phoneNumber,        // Phone number to verify
                             60,                 // Timeout duration
                             TimeUnit.SECONDS,   // Unit of timeout
                             PhoneLoginActivity.this,               // Activity (for callback binding)
                             mCallbacks);        // OnVerificationStateChangedCallbacks
+
+
                     */
                 }
             }

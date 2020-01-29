@@ -132,6 +132,7 @@ public class SettingsActivity extends AppCompatActivity {
                             //get image URL from storage
                             final String downloadUrl = task.getResult().getStorage().toString();
                             System.out.println(downloadUrl);
+
                             //pass URL to DB inside current user
                             DBRef.child("Users").child(currentUserID).child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -175,15 +176,20 @@ public class SettingsActivity extends AppCompatActivity {
 
         String setUsername = username.getText().toString();
         String setStatus = status.getText().toString();
+        String setPictureUrl = DBRef.child("Users").child(currentUserID).child("image").toString();
+
 
         if (TextUtils.isEmpty(setUsername)){
             Toast.makeText(this, "Please insert your user name first...", Toast.LENGTH_SHORT).show();
         }
         else{
+
+
             HashMap<String, String> profileMap = new HashMap<>();
             profileMap.put("uid",currentUserID);
             profileMap.put("name",setUsername);
             profileMap.put("status",setStatus);
+            profileMap.put("image", setPictureUrl);
 
             DBRef.child("Users").child(currentUserID).setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
