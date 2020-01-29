@@ -94,7 +94,8 @@ public class SettingsActivity extends AppCompatActivity {
         loadingBar = new ProgressDialog(this);
     }
 
-    //
+    //For cropping image and saving it to storage
+    //Saves also a link to Users image in DB
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
