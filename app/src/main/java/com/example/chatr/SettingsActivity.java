@@ -195,6 +195,7 @@ public class SettingsActivity extends AppCompatActivity {
             profileMap.put("name",setUsername);
             profileMap.put("status",setStatus);
 
+            //TODO !!!!!!!!!! Somehow loses the img url when saving data FIX IT!!!!
 
             DBRef.child("Users").child(currentUserID).setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -227,8 +228,8 @@ public class SettingsActivity extends AppCompatActivity {
                     String getProfilePicture = dataSnapshot.child("image").getValue().toString();
 
                     //For showing the url for pic
-                    //System.out.println(getProfilePicture);
 
+                    //System.out.println(getProfilePicture);
                     username.setText(getUsername);
                     status.setText(getStatus);
                     //picLink = Uri.parse("https://static.cardmarket.com/img/b37bab18388963d54674993e0b454c1d/items/1/ELD/398659.jpg");
@@ -239,7 +240,7 @@ public class SettingsActivity extends AppCompatActivity {
                     userProfilePicture.setImageURI(getProfilePicture);
 
                 }
-               /* else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name"))){
+                else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name"))){
 
                     String getUsername = dataSnapshot.child("name").getValue().toString();
                     String getStatus = dataSnapshot.child("status").getValue().toString();
@@ -248,7 +249,7 @@ public class SettingsActivity extends AppCompatActivity {
                     status.setText(getStatus);
 
 
-                }*/
+                }
                 else{
                     Toast.makeText(SettingsActivity.this, "Please update your profile information...", Toast.LENGTH_SHORT).show();
                 }
