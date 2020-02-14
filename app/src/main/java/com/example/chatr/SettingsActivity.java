@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -52,6 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private static final int GalleryPic = 1;
 
+    private User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +185,8 @@ public class SettingsActivity extends AppCompatActivity {
         String setUsername = username.getText().toString();
         String setStatus = status.getText().toString();
 
+        String picUri = user.getProfilePic();
+
         if (TextUtils.isEmpty(setUsername)){
             Toast.makeText(this, "Please insert your user name first...", Toast.LENGTH_SHORT).show();
         }
@@ -194,8 +196,8 @@ public class SettingsActivity extends AppCompatActivity {
             profileMap.put("uid",currentUserID);
             profileMap.put("name",setUsername);
             profileMap.put("status",setStatus);
+            profileMap.put("image", picUri);
 
-            //TODO !!!!!!!!!! Somehow loses the img url when saving data FIX IT!!!!
 
             DBRef.child("Users").child(currentUserID).setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -214,6 +216,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+
     //Checks the user info and returns the info from DB
     private void GetUserInfo() {
 
@@ -227,17 +230,19 @@ public class SettingsActivity extends AppCompatActivity {
                     String getStatus = dataSnapshot.child("status").getValue().toString();
                     String getProfilePicture = dataSnapshot.child("image").getValue().toString();
 
-                    //For showing the url for pic
-
-                    //System.out.println(getProfilePicture);
                     username.setText(getUsername);
                     status.setText(getStatus);
                     //picLink = Uri.parse("https://static.cardmarket.com/img/b37bab18388963d54674993e0b454c1d/items/1/ELD/398659.jpg");
-                    picLink = Uri.parse(getProfilePicture);
+                    //picLink = Uri.parse(getProfilePicture);
 
                     //Retrieve the picture and show it (Fresco does it automatically)
 
                     userProfilePicture.setImageURI(getProfilePicture);
+
+                    //Set values for user class for handling the data
+                    user.setCurrentUser(getUsername);
+                    user.setStatus(getStatus);
+                    user.setProfilePic(getProfilePicture);
 
                 }
                 else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name"))){
