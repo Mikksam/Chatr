@@ -8,13 +8,13 @@ public class User {
 
     }
 
-    public void setCurrentUser(String currentUser) {
-        this.currentUser = currentUser;
-    }
-
     public String getCurrentUser(){
         return currentUser;
 
+    }
+
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
     }
 
     public String getProfilePic() {

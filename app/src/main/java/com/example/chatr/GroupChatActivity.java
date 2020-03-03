@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -112,7 +113,16 @@ public class GroupChatActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.group_chat_bar_layout);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(groupChatName);
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendUserToMainActivity();
+                finish();
+            }
+        });
 
         sendMessageButton = (ImageButton) findViewById(R.id.send_message_button);
         messageInput = (EditText) findViewById(R.id.group_write_message);
@@ -198,5 +208,11 @@ public class GroupChatActivity extends AppCompatActivity {
         }
     }
 
-
+    //Send user to main Activity
+    private void SendUserToMainActivity() {
+        Intent mainIntent = new Intent(GroupChatActivity.this, MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+        finish();
+    }
 }

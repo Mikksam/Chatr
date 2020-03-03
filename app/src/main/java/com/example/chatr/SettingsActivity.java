@@ -3,6 +3,7 @@ package com.example.chatr;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -43,6 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
     private Uri picLink;
     private Uri uri;
+    private Toolbar mToolbar;
 
     private String currentUserID;
     private FirebaseAuth mAuth;
@@ -65,6 +67,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         InitializeComponents();
 
+        mToolbar = (Toolbar) findViewById(R.id.my_settings_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Settings");
+
+
         //Listener to save user info
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,18 +94,30 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendUserToMainActivity();
+                finish();
+            }
+        });
+
     }
 
 
 
     //Initialize the components
     private void InitializeComponents() {
+
         saveChangesButton = (Button) findViewById(R.id.save_button);
         username = (EditText) findViewById(R.id.set_username);
         status = (EditText) findViewById(R.id.set_status);
         userProfilePicture = (SimpleDraweeView) findViewById(R.id.my_profile_image);
         loadingBar = new ProgressDialog(this);
+
     }
+
 
     //select and save profile pic
     @Override

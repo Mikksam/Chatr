@@ -7,11 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".SettingsActivity">
 
+    <include
+        android:id="@+id/my_settings_toolbar"
+        layout="@layout/app_bar_layout"
+        >
+
+    </include>
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/my_profile_image"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        fresco:placeholderImage="@drawable/default_profile_image"
+        android:layout_below="@+id/my_settings_toolbar"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
@@ -58,8 +66,11 @@
         android:id="@+id/save_button"
         android:layout_below="@+id/set_status"
         android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@android:color/background_light"
         android:text="Save changes"
         android:textSize="17sp"
+        android:textStyle="bold"
         android:layout_marginStart="60dp"
         android:layout_marginEnd="60dp"
         android:background="@drawable/buttons"

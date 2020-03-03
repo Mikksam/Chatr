@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:title="Add Friend"
+        android:id="@+id/menu_add_friend_option"
+        app:showAsAction="never"
+        >
+    </item>
+
+    <item
         android:title="Create Group"
         android:id="@+id/menu_group_option"
         app:showAsAction="never"
@@ -17,10 +24,10 @@
     </item>
 
     <item
-    android:title="Logout"
-    android:id="@+id/menu_logout_option"
-    app:showAsAction="never"
-    >
+        android:title="Logout"
+        android:id="@+id/menu_logout_option"
+        app:showAsAction="never"
+        >
     </item>
 
 </menu>

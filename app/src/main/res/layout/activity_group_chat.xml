@@ -70,10 +70,10 @@
         <ImageButton
             android:id="@+id/send_message_button"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/streamline_icon_send_b"
+            android:layout_height="60dp"
+            android:src="@drawable/send_message"
             android:layout_alignParentRight="true"
-
+            android:background="@android:color/background_light"
             >
 
         </ImageButton>
