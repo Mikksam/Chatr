@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
@@ -44,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Initialize Fresco for image handling
+        Fresco.initialize(this);
 
         //Initialize Firebase methods
         mAuth = FirebaseAuth.getInstance();
@@ -126,8 +131,13 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.menu_group_option){
             MakeNewGroup();
         }
+        if (item.getItemId() == R.id.menu_add_friend_option){
+            AddFriend();
+        }
+
         return true;
     }
+
 
     //Creates a dialog for making a new group
     //Sends the created group name as a parameter to method that saves ti then to DB
@@ -190,4 +200,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(settingsIntent);
         finish();
     }
+
+    //Sends user to add friends to contacts
+    private void AddFriend() {
+
+        Intent addFriendsIntent = new Intent(MainActivity.this, AddFriendsActivity.class);
+        addFriendsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(addFriendsIntent);
+        finish();
+
+    }
+
+
 }
